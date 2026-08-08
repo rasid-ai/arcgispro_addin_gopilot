@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Compatibility/">
+    <Project Path="Compatibility/Pro30/RASID.Pro30.csproj" />
+    <Project Path="Compatibility/Pro33/RASID.Pro33.csproj" />
+  </Folder>
+  <Project Path="RASID.csproj" />
+</Solution>

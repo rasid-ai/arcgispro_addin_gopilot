@@ -1,0 +1,134 @@
+<UserControl x:Class="Rasid.Pages.About.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             FontFamily="Segoe UI">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="AboutLinkStyle" TargetType="Hyperlink">
+                <Setter Property="Foreground" Value="{StaticResource RasidPrimaryBrush}"/>
+                <Setter Property="TextDecorations" Value="{x:Null}"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="{StaticResource RasidPrimaryHoverBrush}"/>
+                        <Setter Property="TextDecorations" Value="Underline"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="White">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <Grid MaxWidth="900"
+                  Margin="42,0,42,0"
+                  HorizontalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="About RASID"
+                           Margin="0,15,0,26"
+                           FontSize="30"
+                           FontWeight="Bold"
+                           Foreground="#173B5D"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"/>
+
+                <TextBlock Grid.Row="1"
+                           Text="AI-Powered Earth Observation Platform"
+                           Margin="0,0,0,44"
+                           FontSize="14"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource RasidPrimaryBrush}"
+                           HorizontalAlignment="Center"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"/>
+
+                <Border Grid.Row="2"
+                        Height="1"
+                        Margin="0,0,0,38"
+                        Background="{StaticResource RasidBorderBrush}"/>
+
+                <StackPanel Grid.Row="3">
+                    <TextBlock FontSize="14"
+                               LineHeight="24"
+                               Foreground="#173B5D"
+                               TextWrapping="Wrap">
+                        <Run Text="RASID specializes in AI-driven analysis of satellite imagery to provide critical insights for better decision-making. Our team of experts combines deep knowledge in AI, geospatial data, and industry-specific solutions."/>
+                    </TextBlock>
+
+                    <TextBlock Margin="0,22,0,0"
+                               FontSize="14"
+                               LineHeight="24"
+                               Foreground="#173B5D"
+                               TextWrapping="Wrap">
+                        <Run Text="RASID goes beyond a one-size-fits-all model, offering customized geospatial analysis projects that align with the unique requirements of your industry. Our team is prepared to act on innovative solutions."/>
+                    </TextBlock>
+
+                    <TextBlock Margin="0,22,0,0"
+                               FontSize="14"
+                               LineHeight="24"
+                               Foreground="#173B5D"
+                               TextWrapping="Wrap">
+                        <Run Text="Our expertise is designed to provide actionable insights that can be directly applied to the most pressing challenges in your sector."/>
+                    </TextBlock>
+
+                    <TextBlock Margin="0,38,0,42"
+                               FontSize="14"
+                               Foreground="#6A5151"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center">
+                        <Run Text="Learn more at "/>
+                        <Hyperlink Command="{Binding OpenWebsiteCommand}"
+                                   FontWeight="Bold"
+                                   Style="{StaticResource AboutLinkStyle}">
+                            <Run Text="rasid.ai"/>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+                <Border Grid.Row="4"
+                        Height="1"
+                        Background="{StaticResource RasidBorderBrush}"/>
+
+                <StackPanel Grid.Row="5"
+                            Margin="0,46,0,0"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding VersionText}"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               Foreground="#173B5D"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Margin="0,26,0,0"
+                               FontSize="14"
+                               HorizontalAlignment="Center">
+                        <Hyperlink Command="{Binding OpenTermsCommand}"
+                                   Style="{StaticResource AboutLinkStyle}">
+                            <Run Text="Terms of Service"/>
+                        </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock Text="{Binding CopyrightText}"
+                               Margin="0,28,0,18"
+                               FontSize="12"
+                               Foreground="{StaticResource RasidMutedTextBrush}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

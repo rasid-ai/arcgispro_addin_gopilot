@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>GoPilot</RootNamespace>
+    <AssemblyName>GoPilot</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Commands\**\*.cs" Link="Commands\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Module1.cs" Link="Module1.cs" />
+    <Compile Include="..\..\Converters\**\*.cs" Link="Converters\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Dockpane\**\*.cs" Link="Dockpane\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Models\**\*.cs" Link="Models\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Pages\**\*.cs" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\RibbonButton\**\*.cs" Link="RibbonButton\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Services\**\*.cs" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="..\..\Dockpane\**\*.xaml" Link="Dockpane\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Pages\**\*.xaml" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Resources\**\*.xaml" Link="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Services\**\*.xaml" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config.daml" />
+    <Content Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Content Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Content Include="..\..\DarkImages\logo.png" Link="DarkImages\logo.png" />
+    <Content Include="..\..\DarkImages\logo.png" Link="DarkImages\logo.png" />
+    <Resource Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Resource Include="..\..\Images\icon.png" Link="Images\icon.png" />
+    <Resource Include="..\..\Images\icon_nobg.png" Link="Images\icon_nobg.png" />
+    <None Include="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Esri.ArcGISPro.Extensions30" Version="3.3.0.52636" />
+    <PackageReference Include="Emoji.Wpf" Version="0.3.4" />
+    <PackageReference Include="Markdig" Version="1.3.2" />
+    <PackageReference Include="ReverseMarkdown" Version="6.1.1" />
+  </ItemGroup>
+
+  <Target Name="ResolveInstalledArcGISFolder" BeforeTargets="ArcGISInstallOutput;CleanArcGISContents" Condition="!Exists('$(ArcGISFolder)RegisterAddIn.exe') And Exists('$(ProgramW6432)\ArcGIS\Pro\bin\RegisterAddIn.exe')">
+    <PropertyGroup>
+      <ArcGISFolder>$(ProgramW6432)\ArcGIS\Pro\bin\</ArcGISFolder>
+    </PropertyGroup>
+  </Target>
+
+</Project>

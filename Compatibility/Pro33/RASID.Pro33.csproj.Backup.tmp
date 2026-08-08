@@ -1,0 +1,61 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Rasid</RootNamespace>
+    <AssemblyName>RASID</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\Module1.cs" Link="Module1.cs" />
+    <Compile Include="..\..\Converters\**\*.cs" Link="Converters\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Dockpane\**\*.cs" Link="Dockpane\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Models\**\*.cs" Link="Models\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Pages\**\*.cs" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\RibbonButton\**\*.cs" Link="RibbonButton\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="..\..\Services\**\*.cs" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="..\..\Dockpane\**\*.xaml" Link="Dockpane\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Pages\**\*.xaml" Link="Pages\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Resources\**\*.xaml" Link="Resources\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Page Include="..\..\Services\**\*.xaml" Link="Services\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Config.daml" />
+    <Content Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Content Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Content Include="..\..\DarkImages\logo.png" Link="DarkImages\logo.png" />
+    <Content Include="..\..\DarkImages\logo.png" Link="DarkImages\logo.png" />
+    <Resource Include="..\..\Images\logo.png" Link="Images\logo.png" />
+    <Resource Include="..\..\Images\icon.png" Link="Images\icon.png" />
+    <Resource Include="..\..\Images\icon_nobg.png" Link="Images\icon_nobg.png" />
+    <None Include="..\..\Properties\launchSettings.json" Link="Properties\launchSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Esri.ArcGISPro.Extensions30" Version="3.3.0.52636" />
+    <PackageReference Include="HtmlRenderer.WPF" Version="1.6.1" />
+    <PackageReference Include="Markdig" Version="1.3.2" />
+  </ItemGroup>
+
+  <!--
+    ArcGIS Pro SDK 3.3 expects RegisterAddIn.exe under ProgramData.
+    Newer ArcGIS Pro releases place it in the application bin directory.
+    Keep the 3.3 location when available, but allow local debugging on newer Pro.
+  -->
+  <Target Name="ResolveInstalledArcGISFolder" BeforeTargets="ArcGISInstallOutput;CleanArcGISContents" Condition="!Exists('$(ArcGISFolder)') And Exists('$(ProgramFiles)\ArcGIS\Pro\bin\RegisterAddIn.exe')">
+    <PropertyGroup>
+      <ArcGISFolder>$(ProgramFiles)\ArcGIS\Pro\bin\</ArcGISFolder>
+    </PropertyGroup>
+  </Target>
+
+  <Import Project="C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets" Condition="Exists('C:\Program Files\ArcGIS\Pro\bin\Esri.ProApp.SDK.Desktop.targets')" />
+</Project>

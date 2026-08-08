@@ -1,0 +1,239 @@
+<UserControl x:Class="Rasid.Pages.CreateProcessWizard.CreateProcessWizardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource RasidBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="16,10,16,8">
+            <TextBlock Text="Create Process" Style="{StaticResource RasidPageTitleStyle}"/>
+            <TextBlock Text="{Binding ProjectTitle, StringFormat='Project: {0}'}"
+                       Foreground="{StaticResource RasidMutedTextBrush}"
+                       FontSize="10.5"
+                       Margin="0,3,0,0"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="16,0,16,12">
+                <Border Style="{StaticResource RasidCardBorderStyle}"
+                        Visibility="{Binding IsFormReady, Converter={StaticResource BoolToVis}, ConverterParameter=Invert}">
+                    <TextBlock Text="{Binding LoadingText}"
+                               Foreground="{StaticResource RasidMutedTextBrush}"
+                               TextWrapping="Wrap"/>
+                </Border>
+
+                <StackPanel Visibility="{Binding IsFormReady, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="Process name" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource RasidTextBoxStyle}"
+                             Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Dataset type" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,5"/>
+                    <ListBox ItemsSource="{Binding DatasetTypeOptions}"
+                             SelectedValuePath="Key"
+                             SelectedValue="{Binding DatasetType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Margin="0,0,0,12">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,0,8,7"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Card"
+                                                    Background="White"
+                                                    BorderBrush="{StaticResource RasidBorderBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4"
+                                                    Padding="10,7">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Card" Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Card" Property="Background" Value="{StaticResource RasidPrimarySoftBrush}"/>
+                                                    <Setter TargetName="Card" Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Content="{Binding Label}"
+                                             IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}, Mode=OneWay}"
+                                             IsHitTestVisible="False"
+                                             Focusable="False"
+                                             Foreground="{StaticResource RasidTextBrush}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsAoiVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Area of Interest (AOI)" Style="{StaticResource RasidSectionTitleStyle}"/>
+                            <TextBlock Text="Draw an area on the map or use an existing polygon layer."
+                                       FontSize="10"
+                                       Foreground="{StaticResource RasidMutedTextBrush}"
+                                       Margin="0,3,0,8"/>
+                            <WrapPanel>
+                                <Button Content="Draw on Map"
+                                        Command="{Binding DrawAoiCommand}"
+                                        Style="{StaticResource RasidPrimaryButtonStyle}"
+                                        Margin="0,0,7,7"/>
+                                <Button Content="From Layer..."
+                                        Command="{Binding PickLayerCommand}"
+                                        Style="{StaticResource RasidSecondaryButtonStyle}"
+                                        Margin="0,0,0,7"/>
+                            </WrapPanel>
+                            <TextBox Text="{Binding AoiDisplay}"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource RasidTextBoxStyle}"
+                                     MaxHeight="72"
+                                     TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsDateVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Date range" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,7"/>
+                            <WrapPanel>
+                                <StackPanel Margin="0,0,12,0">
+                                    <TextBlock Text="Start date" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}"/>
+                                    <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Width="150"/>
+                                </StackPanel>
+                                <StackPanel Visibility="{Binding IsEndDateVisible, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="End date" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}"/>
+                                    <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Width="150"/>
+                                </StackPanel>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsSentinelVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Sentinel settings" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,7"/>
+                            <TextBlock Text="Data collection" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}"/>
+                            <ComboBox ItemsSource="{Binding DataCollectionOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedItem="{Binding SelectedDataCollection, Mode=TwoWay}"
+                                      Margin="0,2,0,7"/>
+                            <TextBlock Text="Evaluation script" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}"/>
+                            <ComboBox ItemsSource="{Binding EvalScriptOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedItem="{Binding SelectedEvalScript, Mode=TwoWay}"
+                                      Margin="0,2,0,7"/>
+                            <TextBlock Text="Sort by" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}"/>
+                            <ComboBox ItemsSource="{Binding SortByOptions}"
+                                      DisplayMemberPath="Label"
+                                      SelectedItem="{Binding SelectedSortBy, Mode=TwoWay}"
+                                      Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsCatalogueVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Catalogue search" Style="{StaticResource RasidSectionTitleStyle}"/>
+                            <Button Content="Search Available Imagery"
+                                    Command="{Binding SearchCatalogueCommand}"
+                                    Style="{StaticResource RasidSecondaryButtonStyle}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,7,0,7"/>
+                            <ListBox ItemsSource="{Binding CatalogueResults}"
+                                     DisplayMemberPath="Label"
+                                     SelectedItem="{Binding SelectedCatalogueItem, Mode=TwoWay}"
+                                     MinHeight="55"
+                                     MaxHeight="150"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsZoomVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Zoom level" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding ZoomLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource RasidTextBoxStyle}"
+                                     Width="110"
+                                     HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsUploadVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Upload raster (TIFF)" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,7"/>
+                            <WrapPanel>
+                                <TextBlock Text="{Binding UploadFileName}"
+                                           Width="230"
+                                           TextTrimming="CharacterEllipsis"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource RasidMutedTextBrush}"
+                                           Margin="0,0,8,0"/>
+                                <Button Content="Choose File"
+                                        Command="{Binding ChooseFileCommand}"
+                                        Style="{StaticResource RasidSecondaryButtonStyle}"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource RasidCardBorderStyle}"
+                            Margin="0,0,0,10"
+                            Visibility="{Binding IsLinkVisible, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <TextBlock Text="Raster link" Style="{StaticResource RasidSectionTitleStyle}" Margin="0,0,0,5"/>
+                            <TextBox Text="{Binding RasterLink, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource RasidTextBoxStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Background="White" BorderBrush="{StaticResource RasidBorderBrush}" BorderThickness="0,1,0,0" Padding="16,9">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource RasidSecondaryButtonStyle}"
+                        Margin="0,0,8,0"/>
+                <Button Content="Create Process"
+                        Command="{Binding SubmitCommand}"
+                        IsEnabled="{Binding IsFormReady}"
+                        Style="{StaticResource RasidPrimaryButtonStyle}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
