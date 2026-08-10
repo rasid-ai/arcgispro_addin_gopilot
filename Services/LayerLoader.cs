@@ -41,7 +41,8 @@ namespace Rasid.Services
 
 		public static async Task<Layer> LoadResultAsync(
 			string filepath,
-			string layerName)
+			string layerName,
+			string groupName = "Solutions")
 		{
 			if (string.IsNullOrWhiteSpace(filepath) || !System.IO.File.Exists(filepath))
 				throw new System.IO.FileNotFoundException(
@@ -69,10 +70,14 @@ namespace Rasid.Services
 					.OfType<GroupLayer>()
 					.FirstOrDefault(layer => layer.Name == "RASID")
 					?? LayerFactory.Instance.CreateGroupLayer(map, 0, "RASID");
+				var subgroup = group.Layers
+					.OfType<GroupLayer>()
+					.FirstOrDefault(layer => layer.Name == groupName)
+					?? LayerFactory.Instance.CreateGroupLayer(group, 0, groupName);
 
 				var loadedLayer = LayerFactory.Instance.CreateLayer(
 					new System.Uri(filepath),
-					group,
+					subgroup,
 					layerName: layerName);
 
 				if (loadedLayer != null)
@@ -92,14 +97,15 @@ namespace Rasid.Services
 
 		public static async Task<IReadOnlyList<Layer>> LoadResultsAsync(
 			string filepath,
-			string layerName)
+			string layerName,
+			string groupName = "Solutions")
 		{
 			if (string.IsNullOrWhiteSpace(filepath) || !File.Exists(filepath))
 				throw new FileNotFoundException(
 					"The downloaded layer file was not found.", filepath);
 
 			if (!IsZipArchive(filepath))
-				return new[] { await LoadResultAsync(filepath, layerName) };
+				return new[] { await LoadResultAsync(filepath, layerName, groupName) };
 
 			var extractionRoot = ExtractArchive(filepath);
 			var layerFiles = Directory
@@ -121,7 +127,7 @@ namespace Rasid.Services
 				var displayName = layerFiles.Count == 1
 					? layerName
 					: $"{layerName} - {extractedName}";
-				loadedLayers.Add(await LoadResultAsync(layerFiles[index], displayName));
+				loadedLayers.Add(await LoadResultAsync(layerFiles[index], displayName, groupName));
 			}
 
 			return loadedLayers;

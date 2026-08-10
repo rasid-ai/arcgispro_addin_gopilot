@@ -750,7 +750,8 @@ namespace Rasid.Pages.GoPilot
 
                 var loadedLayers = await LayerLoader.LoadResultsAsync(
                     localPath,
-                    Path.GetFileNameWithoutExtension(localPath));
+                    Path.GetFileNameWithoutExtension(localPath),
+                    "GoPilot");
 
                 _loadedLayersByFile[file] = loadedLayers.ToHashSet();
                 var loadedLayerCount = loadedLayers.Count;
