@@ -152,7 +152,7 @@ namespace Rasid.Pages.GoPilot
             var removedLayerNames = args.Layers
                 .Select(layer => layer.Name)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var rasidGroupRemoved = removedLayerNames.Contains("RASID");
+            var goPilotGroupRemoved = removedLayerNames.Contains("GoPilot");
 
             System.Windows.Application.Current.Dispatcher.BeginInvoke(
                 new Action(() =>
@@ -174,7 +174,7 @@ namespace Rasid.Pages.GoPilot
                                 ? file.FileName
                                 : file.LocalPath);
                         if (!trackedLayerRemoved &&
-                            !rasidGroupRemoved &&
+                            !goPilotGroupRemoved &&
                             !removedLayerNames.Contains(layerName))
                             continue;
 
