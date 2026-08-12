@@ -290,7 +290,17 @@ namespace Rasid.Pages.CreateProcessWizard
 
 		private async Task PickAoiFromLayerAsync()
 		{
-			await _geoManager.ShowLayerPickerAsync("Select AOI Layer");
+			try
+			{
+				await _geoManager.ShowLayerPickerAsync(
+					"Select AOI Layer",
+					confirmFirstFeatureOnly: true,
+					requireWgs84: true);
+			}
+			catch (Exception ex)
+			{
+				Notify("Invalid AOI Layer", ex.Message);
+			}
 
 		}
 

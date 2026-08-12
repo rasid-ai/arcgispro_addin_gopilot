@@ -68,11 +68,11 @@ namespace Rasid.Services
 
 				var group = map.GetLayersAsFlattenedList()
 					.OfType<GroupLayer>()
-					.FirstOrDefault(layer => layer.Name == "RASID")
+					.FirstOrDefault(candidate => candidate.Name == "RASID")
 					?? LayerFactory.Instance.CreateGroupLayer(map, 0, "RASID");
 				var subgroup = group.Layers
 					.OfType<GroupLayer>()
-					.FirstOrDefault(layer => layer.Name == groupName)
+					.FirstOrDefault(candidate => candidate.Name == groupName)
 					?? LayerFactory.Instance.CreateGroupLayer(group, 0, groupName);
 
 				var loadedLayer = LayerFactory.Instance.CreateLayer(
@@ -213,8 +213,8 @@ namespace Rasid.Services
 					outputPath,
 					geometryType),
 				null,
-				null,
-				GPExecuteToolFlags.None);
+				CancelableProgressor.None,
+				GPExecuteToolFlags.GPThread);
 
 			var messages = string.Join(
 				Environment.NewLine,
@@ -247,7 +247,6 @@ namespace Rasid.Services
 				throw new InvalidDataException(
 					"The GeoJSON does not contain a valid features array.");
 			}
-
 			var detectedTypes = new HashSet<string>(StringComparer.Ordinal);
 			foreach (var feature in features.EnumerateArray())
 			{

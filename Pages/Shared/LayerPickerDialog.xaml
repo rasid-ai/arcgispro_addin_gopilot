@@ -30,10 +30,12 @@
                        Margin="0,3,0,0"/>
         </StackPanel>
 
-        <ListBox Grid.Row="1"
+        <ListBox x:Name="LayerList"
+                 Grid.Row="1"
                  ItemsSource="{Binding Layers}"
                  DisplayMemberPath="Name"
                  SelectedItem="{Binding SelectedLayer, Mode=TwoWay}"
+                 SelectionChanged="LayerList_SelectionChanged"
                  BorderBrush="{StaticResource RasidBorderBrush}"
                  Background="White"
                  Padding="4"/>

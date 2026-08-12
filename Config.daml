@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArcGIS defaultAssembly="RASID.dll" defaultNamespace="Rasid" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
-  <AddInInfo id="{C9AF1554-F1F5-4201-9AEF-0F61312DFCC0}" version="1.0.1" desktopVersion="3.7.0">
+  <AddInInfo id="{C9AF1554-F1F5-4201-9AEF-0F61312DFCC0}" version="1.0.2" desktopVersion="3.7.0">
 	<Name>GoPilot</Name>
 	<Description>RASID ArcGIS Pro Add-in. IMPORTANT: After installation, fully close and reopen ArcGIS Pro to activate RASID.</Description>
 	<Image>Images\logo.png</Image>
