@@ -31,11 +31,16 @@ namespace Rasid.Services.Geometry
 
             return QueuedTask.Run(() =>
             {
-                using var featureClass = layer.GetFeatureClass();
                 var wgs84 = SpatialReferences.WGS84;
                 var features = new List<object>();
 
-                using var cursor = featureClass.Search();
+                using var selection = layer.GetSelection();
+                var selectedObjectIds = selection.GetObjectIDs();
+                var queryFilter = selectedObjectIds.Count > 0
+                    ? new QueryFilter { ObjectIDs = selectedObjectIds }
+                    : null;
+
+                using var cursor = layer.Search(queryFilter);
                 while (cursor.MoveNext())
                 {
                     using var feature = cursor.Current as Feature;

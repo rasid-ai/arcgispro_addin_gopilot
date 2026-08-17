@@ -171,12 +171,12 @@ namespace Rasid.Pages.Processes
             var removedNames = removedLayers
                 .Select(layer => layer.Name)
                 .ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var rasidGroupRemoved = removedNames.Contains("RASID");
-            var resultRemoved = rasidGroupRemoved ||
+            var solutionsGroupRemoved = removedNames.Contains("GoBox");
+            var resultRemoved = solutionsGroupRemoved ||
                 _resultLayers.Overlaps(removedLayers) ||
                 (!string.IsNullOrWhiteSpace(_resultLayerName) &&
                  removedNames.Contains(_resultLayerName));
-            var datasetRemoved = rasidGroupRemoved ||
+            var datasetRemoved = solutionsGroupRemoved ||
                 _datasetLayers.Overlaps(removedLayers) ||
                 (!string.IsNullOrWhiteSpace(_datasetLayerName) &&
                  removedNames.Contains(_datasetLayerName));

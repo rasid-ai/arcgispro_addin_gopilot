@@ -66,7 +66,7 @@ namespace Rasid.Services
 			{
 				var map = mapView.Map;
 
-				var group = map.GetLayersAsFlattenedList()
+				var group = map.Layers
 					.OfType<GroupLayer>()
 					.FirstOrDefault(candidate => candidate.Name == "RASID")
 					?? LayerFactory.Instance.CreateGroupLayer(map, 0, "RASID");
@@ -77,7 +77,7 @@ namespace Rasid.Services
 
 				var loadedLayer = LayerFactory.Instance.CreateLayer(
 					new System.Uri(filepath),
-					subgroup,
+					group,
 					layerName: layerName);
 
 				if (loadedLayer != null)

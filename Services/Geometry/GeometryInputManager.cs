@@ -4,6 +4,7 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
 using ArcGIS.Desktop.Mapping;
 using Rasid.Pages.Shared;
 using System.Windows.Input;
@@ -209,7 +210,10 @@ namespace Rasid.Services.Geometry
             }
         }
 
-        public async Task<bool> ShowLayerPickerAsync(string title = "Select Layer")
+        public async Task<bool> ShowLayerPickerAsync(
+            string title = "Select Layer",
+            bool confirmFirstFeatureOnly = false,
+            bool requireWgs84 = false)
         {
             ThrowIfDisposed();
 
@@ -222,8 +226,32 @@ namespace Rasid.Services.Geometry
             dialog.DataContext = vm;
             await vm.LoadLayersAsync();
 
-            if (dialog.ShowDialog() == true && vm.SelectedLayer != null)
+            var dialogResult = dialog.ShowDialog();
+            if (dialogResult == true && vm.SelectedLayer != null)
             {
+                if (requireWgs84 && !await IsWgs84Async(vm.SelectedLayer))
+                    throw new InvalidOperationException(
+                        "The selected layer must use WGS 84 (EPSG:4326). " +
+                        "Please reproject the layer and try again.");
+
+                if (confirmFirstFeatureOnly)
+                {
+                    var featureCount = await CountConsideredFeaturesAsync(vm.SelectedLayer);
+                    if (featureCount > 1)
+                    {
+                        var reply = System.Windows.MessageBox.Show(
+                            FrameworkApplication.Current.MainWindow,
+                            $"The layer has {featureCount} features. Only the first feature will be used.\n\n" +
+                            "Do you want to continue?",
+                            "Multiple Features",
+                            System.Windows.MessageBoxButton.YesNo,
+                            System.Windows.MessageBoxImage.Question,
+                            System.Windows.MessageBoxResult.No);
+                        if (reply != System.Windows.MessageBoxResult.Yes)
+                            return false;
+                    }
+                }
+
                 var geojson = await GeoJsonConverter.FromLayerAsync(vm.SelectedLayer);
                 GeometryReady?.Invoke(new GeoJsonResult
                 {
@@ -236,6 +264,25 @@ namespace Rasid.Services.Geometry
 
             return false;
         }
+
+        private static Task<bool> IsWgs84Async(FeatureLayer layer) =>
+            QueuedTask.Run(() => layer.GetSpatialReference()?.Wkid == 4326);
+
+        private static Task<long> CountConsideredFeaturesAsync(FeatureLayer layer) =>
+            QueuedTask.Run(() =>
+            {
+                using var selection = layer.GetSelection();
+                var selectedCount = selection.GetCount();
+                if (selectedCount > 0)
+                    return selectedCount;
+
+                long featureCount = 0;
+                using var cursor = layer.Search(null);
+                while (cursor.MoveNext())
+                    featureCount++;
+
+                return featureCount;
+            });
 
         public void Dispose()
         {
