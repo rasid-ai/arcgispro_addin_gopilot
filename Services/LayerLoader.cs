@@ -68,8 +68,12 @@ namespace Rasid.Services
 
 				var group = map.Layers
 					.OfType<GroupLayer>()
+					.FirstOrDefault(candidate => candidate.Name == "RASID")
+					?? LayerFactory.Instance.CreateGroupLayer(map, 0, "RASID");
+				var subgroup = group.Layers
+					.OfType<GroupLayer>()
 					.FirstOrDefault(candidate => candidate.Name == groupName)
-					?? LayerFactory.Instance.CreateGroupLayer(map, 0, groupName);
+					?? LayerFactory.Instance.CreateGroupLayer(group, 0, groupName);
 
 				var loadedLayer = LayerFactory.Instance.CreateLayer(
 					new System.Uri(filepath),
