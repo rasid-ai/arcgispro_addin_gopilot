@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArcGIS defaultAssembly="RASID.dll" defaultNamespace="Rasid" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{C9AF1554-F1F5-4201-9AEF-0F61312DFCC0}" version="1.0.2" desktopVersion="3.0.0">
+	<Name>RASID</Name>
+	<Description>RASID ArcGIS Pro Add-in. IMPORTANT: After installation, fully close and reopen ArcGIS Pro to activate RASID.</Description>
+	<Image>Images\logo.png</Image>
+	<Author>RASID Team</Author>
+	<Company>RASID</Company>
+	<Date>1/1/2024</Date>
+	<Subject>Framework</Subject>
+  </AddInInfo>
+  <modules>
+	<insertModule id="Rasid_Module" className="Module1" autoLoad="true" caption="RASID">
+	
+	  <controls>
+		<button id="Rasid_ShowDockpane_Button" caption="GoPilot"
+				className="Rasid.RibbonButton.ShowRasidDockpaneButton"
+				loadOnClick="true"
+				smallImage="Images\logo.png"
+				largeImage="Images\logo.png">
+		  <tooltip heading="RASID">
+			Open the RASID panel<disabledText/>
+		  </tooltip>
+		</button>
+		<tool id="Rasid_AoiSketchTool"
+			  caption="Draw RASID Area"
+			  className="Rasid.Services.Geometry.AoiSketchTool"
+			  loadOnClick="true"
+			  smallImage="Images\logo.png"
+			  largeImage="Images\logo.png"
+			  condition="esri_mapping_mapPane">
+		  <tooltip heading="Draw Area">
+			Draw a polygon on the active map for RASID.<disabledText/>
+		  </tooltip>
+		</tool>
+	  </controls>
+	  <dockPanes>
+		<dockPane id="Rasid_DockpaneID" caption="RASID" className="Rasid.Dockpane.RasidDockpaneViewModel"
+			  dock="group" dockWith="esri_core_projectDockPane">
+		  <content className="Rasid.Dockpane.RasidDockpaneView"/>
+		</dockPane>
+	  </dockPanes>
+	</insertModule>
+  </modules>
+</ArcGIS>

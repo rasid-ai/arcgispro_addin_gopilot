@@ -1,0 +1,185 @@
+<Window x:Class="Rasid.Pages.Shared.FeedbackDialogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Feedback"
+        Width="500"
+        Height="454"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        UseLayoutRounding="True"
+        Background="{DynamicResource RasidBackgroundBrush}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="FeedbackStarButtonStyle"
+                   TargetType="Button"
+                   BasedOn="{StaticResource RasidSecondaryButtonStyle}">
+                <Setter Property="Width" Value="38"/>
+                <Setter Property="Height" Value="38"/>
+                <Setter Property="Margin" Value="0,0,8,0"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="FontSize" Value="22"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="Foreground" Value="{StaticResource RasidMutedTextBrush}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsFilled}" Value="True">
+                        <Setter Property="Foreground" Value="#E1A326"/>
+                        <Setter Property="BorderBrush" Value="#E1A326"/>
+                        <Setter Property="Background" Value="#FFF9E8"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="FeedbackMessageTextBoxStyle" TargetType="TextBox">
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Foreground" Value="{StaticResource RasidTextBrush}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TextBox">
+                            <Border x:Name="MessageBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="6">
+                                <Grid>
+                                    <ScrollViewer x:Name="PART_ContentHost" Margin="10"/>
+                                    <TextBlock x:Name="MessagePlaceholder"
+                                               Text="{TemplateBinding Tag}"
+                                               Margin="10"
+                                               VerticalAlignment="Top"
+                                               Foreground="{StaticResource RasidMutedTextBrush}"
+                                               IsHitTestVisible="False"
+                                               Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="Text" Value=""/>
+                                        <Condition Property="IsKeyboardFocused" Value="False"/>
+                                    </MultiTrigger.Conditions>
+                                    <Setter TargetName="MessagePlaceholder"
+                                            Property="Visibility"
+                                            Value="Visible"/>
+                                </MultiTrigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter TargetName="MessageBorder"
+                                            Property="BorderBrush"
+                                            Value="{StaticResource RasidPrimaryBrush}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="MessageBorder" Property="Opacity" Value="0.55"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="18">
+        <Border Style="{StaticResource RasidCardBorderStyle}" Padding="24">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="110"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Text="Provide Feedback"
+                           Style="{StaticResource RasidPageTitleStyle}"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="1"
+                           Text="We value your input to improve the platform."
+                           HorizontalAlignment="Center"
+                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           Margin="0,4,0,0"/>
+
+                <TextBlock Grid.Row="2"
+                           Text="How would you rate your experience?"
+                           Style="{StaticResource RasidSectionTitleStyle}"
+                           Margin="0,22,0,0"/>
+                <ItemsControl Grid.Row="3"
+                              ItemsSource="{Binding Stars}"
+                              Margin="0,8,0,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding IsFilled, Converter={StaticResource StarGlyphConverter}}"
+                                    Command="{Binding SetRatingCommand}"
+                                    Style="{StaticResource FeedbackStarButtonStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <TextBlock Grid.Row="4"
+                           Text="Your message *"
+                           Style="{StaticResource RasidSectionTitleStyle}"
+                           Margin="0,18,0,6"/>
+
+                <Grid Grid.Row="5">
+                    <TextBox Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             MaxLength="2000"
+                             Tag="Tell us what you like or what we can improve..."
+                             Style="{StaticResource FeedbackMessageTextBoxStyle}"/>
+                </Grid>
+
+                <Grid Grid.Row="7" Margin="0,18,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1"
+                            Content="Cancel"
+                            Width="86"
+                            Margin="0,0,10,0"
+                            IsCancel="True"
+                            Click="CancelButton_Click"
+                            Style="{StaticResource RasidSecondaryButtonStyle}"/>
+
+                    <Button Grid.Column="2"
+                            Width="142"
+                            Command="{Binding SubmitCommand}"
+                            IsDefault="True">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource RasidPrimaryButtonStyle}">
+                                <Setter Property="Content" Value="Submit Feedback"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSubmitting}" Value="True">
+                                        <Setter Property="Content" Value="Submitting..."/>
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

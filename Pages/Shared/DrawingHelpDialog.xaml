@@ -1,0 +1,117 @@
+<Window x:Class="Rasid.Pages.Shared.DrawingHelpDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Drawing on the Map"
+        Width="520"
+        Height="620"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Background="White">
+    <Window.Resources>
+        <SolidColorBrush x:Key="Ink" Color="#18324E"/>
+        <SolidColorBrush x:Key="Accent" Color="#009879"/>
+    </Window.Resources>
+
+    <Grid Margin="30,24,30,22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal">
+            <Canvas Width="68" Height="58">
+                <Polygon Points="16,31 34,6 52,25 44,48"
+                         Stroke="#62C4B7"
+                         StrokeThickness="2"
+                         Fill="Transparent"/>
+                <Ellipse Width="12" Height="12"
+                         Canvas.Left="10" Canvas.Top="25"
+                         Fill="#F05A4F"/>
+            </Canvas>
+            <TextBlock Text="Drawing on the Map"
+                       VerticalAlignment="Center"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="25"
+                       FontWeight="Bold"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="4,28,4,0">
+            <TextBlock Text="How to draw a polygon on the map:"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="15"
+                       FontWeight="Bold"/>
+
+            <TextBlock Margin="4,68,0,0"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="14">
+                <Run Text="▣  Left-click" FontWeight="Bold"/>
+                <Run Text=" on the map to add points to your polygon"/>
+            </TextBlock>
+
+            <TextBlock Margin="4,74,0,0"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="14">
+                <Run Text="▣  Right-click" FontWeight="Bold"/>
+                <Run Text=" to finish drawing and close the polygon"/>
+            </TextBlock>
+
+            <TextBlock Margin="0,70,0,0"
+                       Text="Your drawn geometry will be attached to your message and sent to the AI."
+                       Foreground="{StaticResource Ink}"
+                       FontSize="14"
+                       TextWrapping="Wrap"/>
+
+            <TextBlock Margin="4,34,0,0"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="14">
+                <Run Text="💡 Tips:" FontWeight="Bold"/>
+            </TextBlock>
+            <TextBlock Margin="22,18,0,0"
+                       Text="• You need at least 3 points to create a polygon"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="12.5"/>
+            <TextBlock Margin="22,17,0,0"
+                       Text="• The map is activated automatically when drawing starts"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="12.5"/>
+            <TextBlock Margin="22,17,0,0"
+                       Text="• Click accurately — each click adds a point to your polygon"
+                       Foreground="{StaticResource Ink}"
+                       FontSize="12.5"/>
+
+            <CheckBox x:Name="DontShowAgainCheckBox"
+                      Content="Don't show this again"
+                      Margin="0,28,0,0"
+                      Foreground="{StaticResource Ink}"
+                      FontSize="13"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="188"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1"
+                    Content="Cancel"
+                    IsCancel="True"
+                    Click="Cancel_Click"
+                    Padding="12,10"
+                    Background="White"
+                    BorderBrush="#D5DADD"
+                    Foreground="{StaticResource Ink}"/>
+            <Button Grid.Column="3"
+                    Content="Got it, let’s draw!"
+                    IsDefault="True"
+                    Click="Draw_Click"
+                    Padding="12,10"
+                    Background="{StaticResource Accent}"
+                    BorderBrush="{StaticResource Accent}"
+                    Foreground="White"
+                    FontWeight="Bold"/>
+        </Grid>
+    </Grid>
+</Window>

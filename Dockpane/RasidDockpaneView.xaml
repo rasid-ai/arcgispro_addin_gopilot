@@ -1,0 +1,133 @@
+<UserControl x:Class="Rasid.Dockpane.RasidDockpaneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:gopilot="clr-namespace:Rasid.Pages.GoPilot"
+             xmlns:login="clr-namespace:Rasid.Pages.Login"
+             xmlns:processes="clr-namespace:Rasid.Pages.Processes"
+             xmlns:solutions="clr-namespace:Rasid.Pages.Solutions"
+             xmlns:projects="clr-namespace:Rasid.Pages.Projects"
+             xmlns:about="clr-namespace:Rasid.Pages.About"
+             mc:Ignorable="d"
+             d:DataContext="{Binding Path=ui.RasidDockpaneViewModel}"
+             FontFamily="Segoe UI"
+             MinWidth="540"
+             MinHeight="330">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate DataType="{x:Type gopilot:GoPilotViewModel}">
+                <gopilot:GoPilotView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type login:LoginViewModel}">
+                <login:LoginView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type processes:ProcessesViewModel}">
+                <processes:ProcessView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type solutions:SolutionsViewModel}">
+                <solutions:SolutionsView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type projects:ProjectsViewModel}">
+                <projects:ProjectsView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type about:AboutViewModel}">
+                <about:AboutView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <DockPanel Background="{StaticResource RasidBackgroundBrush}">
+        <Border DockPanel.Dock="Left"
+                Width="132"
+                Background="White"
+                BorderBrush="{StaticResource RasidBorderBrush}"
+                BorderThickness="0,0,1,0"
+                Visibility="{Binding IsNavigationVisible, Converter={StaticResource BoolToVis}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Margin="10,12,10,4">
+                    <Image Source="/RASID;component/Images/logo.png"
+                           Height="58"
+                           Stretch="Uniform"/>
+                    <TextBlock Margin="0,7,0,0"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource RasidTextBrush}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap">
+                        <Hyperlink Command="{Binding OpenProfileCommand}"
+                                   Cursor="Hand"
+                                   Foreground="{StaticResource RasidTextBrush}"
+                                   TextDecorations="Underline"
+                                   ToolTip="Open your RASID profile">
+                            <Run Text="{Binding WelcomeText, Mode=OneWay}"/>
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Margin="0,2,0,0"
+                               FontSize="10"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource RasidTextBrush}"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap">
+                        <Hyperlink Command="{Binding OpenCreditsCommand}"
+                                   Cursor="Hand"
+                                   Foreground="{StaticResource RasidTextBrush}"
+                                   TextDecorations="Underline"
+                                   ToolTip="Purchase or refill RASID credits">
+                            <Run Text="{Binding CreditsText, Mode=OneWay}"/>
+                        </Hyperlink>
+                    </TextBlock>
+                </StackPanel>
+
+                <Separator Grid.Row="1" Margin="10,4" Background="{StaticResource RasidBorderBrush}"/>
+
+                <StackPanel Grid.Row="2" Margin="0,4,0,0">
+                    <ToggleButton Content="GoPilot"
+                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=GoPilot, Mode=OneWay}"
+                                  Command="{Binding ShowGoPilotCommand}"/>
+                    <ToggleButton Content="Solutions"
+                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Solutions, Mode=OneWay}"
+                                  Command="{Binding ShowSolutionsCommand}"/>
+                    <ToggleButton Content="Projects"
+                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=Projects, Mode=OneWay}"
+                                  Command="{Binding ShowProjectsCommand}"/>
+                    <Button Content="Feedback"
+                            Style="{StaticResource RasidNavActionButtonStyle}"
+                            Command="{Binding ShowFeedbackCommand}"/>
+                    <ToggleButton Content="About Us"
+                                  Style="{StaticResource RasidNavButtonStyle}"
+                                  IsChecked="{Binding CurrentSection, Converter={StaticResource StringEqualsConverter}, ConverterParameter=About, Mode=OneWay}"
+                                  Command="{Binding ShowAboutCommand}"/>
+                </StackPanel>
+
+                <Button Grid.Row="3"
+                        Content="Log Out"
+                        Command="{Binding LogOutCommand}"
+                        Margin="12,8,12,12"
+                        Padding="10,6"
+                        Foreground="{StaticResource RasidDangerBrush}"
+                        BorderBrush="#DFA7A7"
+                        Style="{StaticResource RasidSecondaryButtonStyle}"/>
+            </Grid>
+        </Border>
+
+        <Border Background="White" Margin="0">
+            <ContentControl Content="{Binding CurrentPage}"/>
+        </Border>
+    </DockPanel>
+</UserControl>

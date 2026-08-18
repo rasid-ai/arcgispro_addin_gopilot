@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'RASID.Pro30'">
+    <BaseIntermediateOutputPath>obj\Pro30\</BaseIntermediateOutputPath>
+    <MSBuildProjectExtensionsPath>obj\Pro30\</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+</Project>

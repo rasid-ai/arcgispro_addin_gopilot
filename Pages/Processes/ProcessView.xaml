@@ -1,0 +1,226 @@
+<UserControl x:Class="Rasid.Pages.Processes.ProcessView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wizard="clr-namespace:Rasid.Pages.CreateProcessWizard"
+             xmlns:processes="clr-namespace:Rasid.Pages.Processes">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate DataType="{x:Type wizard:CreateProcessWizardViewModel}">
+                <wizard:CreateProcessWizardView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type processes:ProcessDetailViewModel}">
+                <processes:ProcessDetailView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource RasidBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="14,10,14,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="{Binding ProjectTitle}" Style="{StaticResource RasidPageTitleStyle}"/>
+                <TextBlock Text="{Binding StatusText}" FontSize="10" Foreground="{StaticResource RasidMutedTextBrush}" Margin="0,2,0,0"/>
+            </StackPanel>
+            <Button Grid.Column="1"
+                    Content="← Back"
+                    Command="{Binding BackCommand}"
+                    Style="{StaticResource RasidSecondaryButtonStyle}"
+                    Visibility="{Binding IsWizardActive, Converter={StaticResource BoolToVis}}"/>
+            <Button Grid.Column="1"
+                    Content="+ New Process"
+                    Command="{Binding NewProcessCommand}">
+                <Button.Style>
+                    <Style TargetType="Button"
+                           BasedOn="{StaticResource RasidPrimaryButtonStyle}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsWizardActive}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ShowEmptyState}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid Visibility="{Binding IsWizardActive, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="330"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Background="White" BorderBrush="{StaticResource RasidBorderBrush}" BorderThickness="0,1,1,0">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding Processes}" Margin="8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,0,0,5"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            ClipToBounds="True">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="White"/>
+                                                <Setter Property="BorderBrush" Value="{StaticResource RasidBorderBrush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                        <Setter Property="Background" Value="{StaticResource RasidPrimarySoftBrush}"/>
+                                                        <Setter Property="BorderBrush" Value="{StaticResource RasidPrimaryBrush}"/>
+                                                        <Setter Property="BorderThickness" Value="2"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+
+                                        <Grid Height="62">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="62"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="42"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Grid.ColumnSpan="3"
+                                                    Command="{Binding SelectCommand}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Cursor="Hand"
+                                                    ToolTip="Open process details"/>
+
+                                            <Border Margin="6"
+                                                    Background="{StaticResource RasidPrimarySoftBrush}"
+                                                    CornerRadius="2"
+                                                    ClipToBounds="True"
+                                                    IsHitTestVisible="False">
+                                                <Grid>
+                                                    <Image Source="{Binding Thumbnail}"
+                                                           Stretch="UniformToFill"/>
+                                                    <TextBlock Text="No preview"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               TextAlignment="Center"
+                                                               FontSize="8"
+                                                               Foreground="{StaticResource RasidMutedTextBrush}">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Thumbnail}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+
+                                            <StackPanel Grid.Column="1"
+                                                        Margin="4,7,4,6"
+                                                        IsHitTestVisible="False">
+                                                <TextBlock Text="{Binding Process.Name}"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{StaticResource RasidTextBrush}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <Border Background="{Binding StatusColor}"
+                                                        CornerRadius="3"
+                                                        Padding="7,2"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="0,5,0,0">
+                                                    <TextBlock Text="{Binding StatusLabel}"
+                                                               Foreground="White"
+                                                               FontSize="9"/>
+                                                </Border>
+                                            </StackPanel>
+
+                                            <Button Grid.Column="2"
+                                                    Command="{Binding HideCommand}"
+                                                    Content="&#xE74D;"
+                                                    FontFamily="Segoe MDL2 Assets"
+                                                    FontSize="15"
+                                                    Foreground="{StaticResource RasidDangerBrush}"
+                                                    Background="White"
+                                                    BorderBrush="{StaticResource RasidBorderBrush}"
+                                                    BorderThickness="1"
+                                                    Width="32"
+                                                    Height="32"
+                                                    Padding="0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Cursor="Hand"
+                                                    ToolTip="Hide process"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+
+                <ContentControl Grid.Column="1" Content="{Binding Detail}"/>
+
+                <Border Grid.ColumnSpan="2"
+                        Background="{StaticResource RasidBackgroundBrush}"
+                        Padding="24"
+                        Visibility="{Binding ShowEmptyState, Converter={StaticResource BoolToVis}}">
+                    <Border MaxWidth="420"
+                            Padding="34"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource RasidCardBorderStyle}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <Border Width="52"
+                                    Height="52"
+                                    CornerRadius="26"
+                                    Background="{StaticResource RasidPrimarySoftBrush}"
+                                    HorizontalAlignment="Center">
+                                <TextBlock Text="+"
+                                           FontSize="30"
+                                           FontWeight="Light"
+                                           Foreground="{StaticResource RasidPrimaryBrush}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Margin="0,-3,0,0"/>
+                            </Border>
+                            <TextBlock Text="No processes yet"
+                                       Margin="0,16,0,0"
+                                       FontSize="18"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource RasidTextBrush}"
+                                       TextAlignment="Center"/>
+                            <TextBlock Text="Create your first process to start an analysis and view its results here."
+                                       Margin="0,7,0,18"
+                                       MaxWidth="310"
+                                       FontSize="11"
+                                       Foreground="{StaticResource RasidMutedTextBrush}"
+                                       TextAlignment="Center"
+                                       TextWrapping="Wrap"/>
+                            <Button Content="+ Create First Process"
+                                    Command="{Binding NewProcessCommand}"
+                                    Style="{StaticResource RasidPrimaryButtonStyle}"
+                                    Padding="18,8"
+                                    HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </Grid>
+
+            <ContentControl Content="{Binding BodyContent}"
+                            Visibility="{Binding IsWizardActive, Converter={StaticResource BoolToVis}}"/>
+        </Grid>
+    </Grid>
+</UserControl>

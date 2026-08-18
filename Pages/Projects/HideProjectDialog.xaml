@@ -1,0 +1,80 @@
+<Window x:Class="Rasid.Pages.Projects.HideProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hide Project"
+        Width="480"
+        SizeToContent="Height"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Background="{StaticResource RasidBackgroundBrush}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/RASID;component/Resources/SharedResources.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="⚠"
+                       FontFamily="Segoe UI Symbol"
+                       FontSize="35"
+                       Foreground="#E39A3B"
+                       VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock FontSize="15"
+                           Foreground="{StaticResource RasidTextBrush}"
+                           TextWrapping="Wrap">
+                    <Run Text="Hide project &quot;"/>
+                    <Run Text="{Binding ProjectTitle}"/>
+                    <Run Text="&quot;?"/>
+                </TextBlock>
+
+                <TextBlock Margin="0,18,0,0"
+                           FontSize="14"
+                           LineHeight="21"
+                           Foreground="{StaticResource RasidMutedTextBrush}"
+                           TextWrapping="Wrap">
+                    <Run Text="It will move to Hidden Items. Permanent deletion is available at:"/>
+                    <LineBreak/>
+                    <Hyperlink NavigateUri="https://app.rasid.ai/hidden-items"
+                               RequestNavigate="HiddenItemsLink_RequestNavigate"
+                               Foreground="{StaticResource RasidPrimaryBrush}"
+                               TextDecorations="None">
+                        <Run Text="https://app.rasid.ai/hidden-items"/>
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Margin="0,22,0,0"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Yes"
+                    Width="86"
+                    IsDefault="True"
+                    Click="Yes_Click"
+                    Style="{StaticResource RasidSecondaryButtonStyle}"/>
+            <Button Content="No"
+                    Width="86"
+                    Margin="14,0,0,0"
+                    IsCancel="True"
+                    Click="No_Click"
+                    Style="{StaticResource RasidSecondaryButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>
